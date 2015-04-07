@@ -5,6 +5,9 @@ using System.Data.SqlClient;
 using System.Windows;
 using SpreadsheetGear;
 using System.Collections.Generic;
+using Microsoft.Win32;
+using System.Windows.Data;
+using System.Windows.Controls;
 
 namespace Ming.Tools
 {
@@ -21,6 +24,8 @@ namespace Ming.Tools
         int[] _eventID;
         int[] _year;
 
+        DataTable _Data;
+
         #endregion
 
 
@@ -35,7 +40,6 @@ namespace Ming.Tools
         private void btnBuildDataUsingSpreadSheetGear_Click(object sender, RoutedEventArgs e)
         {
             BuildDataUsingSpreadSheetGear(txtFilename.Text);
-            SaveDataToSql();
         }
 
 
@@ -43,7 +47,6 @@ namespace Ming.Tools
         private void btnBuildDataFromSql_Click(object sender, RoutedEventArgs e)
         {
             BuildDataFromSql();
-            SaveDataToSql();
         }
 
 
@@ -82,6 +85,12 @@ namespace Ming.Tools
 
 
 
+
+
+        /// <summary>
+        /// Used for AIR US_TOH, and Get rid of the first chars in the event string
+        /// </summary>
+        /// <param name="filename"></param>
         void BuildDataFromTextFile(string filename)
         {
             var allData = System.IO.File.ReadAllText(filename);
@@ -99,10 +108,16 @@ namespace Ming.Tools
                 string[] cols = lines[i].Split(',');
 
                 // get year and eventid
-                if (cols.Length == 4)
+                if (cols.Length == 3)
                 {
                     int year, eventid;
-                    if (int.TryParse(cols[0], out year) && int.TryParse(cols[2], out eventid)) {
+
+                    // remove the '22' from event string
+                    string eventStr = cols[2];
+                    //eventStr = eventStr.Substring(2);   // do not remove '22' for AIR TOH
+
+                    if (int.TryParse(cols[1], out year) && int.TryParse(eventStr, out eventid))
+                    {
                         lstYear.Add(year);
                         lstEvent.Add(eventid);
                     }
@@ -111,6 +126,41 @@ namespace Ming.Tools
 
             _year = lstYear.ToArray();
             _eventID = lstEvent.ToArray();
+
+        }
+
+
+
+        void BuildDataFromTextFile_NotUsed(string filename)
+        {
+            string[] lines = System.IO.File.ReadAllLines(filename);
+
+            // read the first row to get columns names
+            string[] columns = lines[0].Split(',');
+
+            // build data table
+            _Data = new DataTable();
+            foreach (string item in columns) {
+                _Data.Columns.Add(item);
+            }
+            
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] cols = lines[i].Split(',');
+
+                DataRow row = _Data.NewRow();
+                _Data.Rows.Add(row);
+                for (int col = 0; col < cols.Length; col++)
+                {
+                    row[col] = cols[col];
+                }
+            }
+
+            var dd = new Binding();
+            dd.Source = _Data;
+            BindingOperations.SetBinding(gridData, DataGrid.ItemsSourceProperty, dd);
+
+            //gridData.DataContext = _Data;
 
         }
 
@@ -181,7 +231,7 @@ namespace Ming.Tools
             var sqlconn = new SqlConnection(CONN_STRING);
             sqlconn.Open();
 
-            var da = new SqlDataAdapter("SELECT TOP 0 Model, Peril, Trial, Year, EventID from [tblMasterYlt]", sqlconn);
+            var da = new SqlDataAdapter("SELECT TOP 0 Model, Peril, DRVersion, Trial, Year, EventID from [tblMasterYlt]", sqlconn);
             SqlCommandBuilder cb = new SqlCommandBuilder(da);
             da.InsertCommand = cb.GetInsertCommand();
 
@@ -192,6 +242,7 @@ namespace Ming.Tools
             DataRow row = tb.NewRow();
             row["Model"] = txtModel.Text;
             row["Peril"] = txtPeril.Text;
+            row["DRVersion"] = txtDRVersion.Text;
             row["Trial"] = Convert.ToInt32(txtTrial.Text);
             row["Year"] = GetByteArrayFromIntArray(_year);
             row["EventID"] = GetByteArrayFromIntArray(_eventID);
@@ -252,6 +303,19 @@ namespace Ming.Tools
         private void btnBuildDataFromTextFile_Click(object sender, RoutedEventArgs e)
         {
             BuildDataFromTextFile(txtFilename.Text);
+            //SaveDataToSql();
+        }
+
+
+        private void btnBrowseFile_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFileDialog();
+            if (dlg.ShowDialog() == true) txtFilename.Text = dlg.FileName;
+        }
+
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
             SaveDataToSql();
         }
 
