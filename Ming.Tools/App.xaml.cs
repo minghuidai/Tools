@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using TMTech.MapService.Infrastructure;
 
 namespace Ming.Tools
 {
@@ -13,5 +14,10 @@ namespace Ming.Tools
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Configuration.LocalDataPath = @"C:\Projects\Github\bro\App_Data\Shapes";
+            //Configuration.LocalDataPath = @"G:\Temp\Shapes";
+        }
     }
 }
