@@ -7,15 +7,24 @@
       d:DesignHeight="300" d:DesignWidth="300"
 	Title="Dashboard">
 
-    <Grid>
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <StackPanel>
+            <Label>Fast Analytics</Label>
             <TextBlock><Hyperlink NavigateUri="ConvertBinaryData.xaml" >Convert Binary Data to SQL</Hyperlink></TextBlock>
+            <TextBlock><Hyperlink NavigateUri="ShowExistingYLT.xaml" >Show Existing Master YLT</Hyperlink></TextBlock>
+            
+            <Separator></Separator>
+            
+            <Label>BRO</Label>
             <TextBlock><Hyperlink NavigateUri="DownloadBingMapShaoe.xaml" >Download Bing Map Shapes</Hyperlink></TextBlock>
+            
+
+            
         </StackPanel>
     </Grid>
 </Page>

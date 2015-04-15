@@ -17,34 +17,31 @@
             <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
-        <m:Map x:Name="bingMap" Grid.Row="1" Grid.Column="1" CredentialsProvider="Ai6zQ5AwxFAZKY3DtRmKAPJHZVlK4h_e01jNbblWGbagsXzwH0nf5vYrTEr13kBd" 
-			ZoomLevel="0" Heading="0" 
-        />
-        
-        <StackPanel Grid.Row="1">
-            <Label>Data level:</Label>
-            <ComboBox x:Name="txtDataLevel">
-                <ComboBoxItem>AdminDivision2</ComboBoxItem>
-                <ComboBoxItem>Postcode1</ComboBoxItem>
-            </ComboBox>
 
-            <Label>Locations:</Label>
-            <RichTextBox x:Name="txtLocations" Height="100"/>
-
-            <Label>Not Found Locations:</Label>
-            <RichTextBox x:Name="txtNotFoundLocations" Height="100"/>
-
-
-        </StackPanel>
-
-        
         <Menu Grid.ColumnSpan="2">
             <MenuItem Header="Draw Boundries" Click="btnDrawBoundries_Click"></MenuItem>
             <MenuItem Header="Retrieve Boundries" Click="btnDownload_Click"></MenuItem>
             <MenuItem Header="Check Boundries" Click="btnCheck_Click"></MenuItem>
             <CheckBox x:Name="chkQuerySpatial">Query Spatial Data</CheckBox>
         </Menu>
+
+
+
+        <StackPanel Grid.Row="1">
+            <Label>Data level:</Label>
+            <ComboBox x:Name="txtDataLevel">
+                <ComboBoxItem>AdminDivision2</ComboBoxItem>
+                <ComboBoxItem>Postcode1</ComboBoxItem>
+            </ComboBox>
+            <Label>Locations:</Label>
+            <RichTextBox x:Name="txtLocations" Height="100"/>
+            <Label>Not Found Locations:</Label>
+            <RichTextBox x:Name="txtNotFoundLocations" Height="100"/>
+        </StackPanel>
+
+
+        <m:Map x:Name="bingMap" Grid.Row="1" Grid.Column="1" CredentialsProvider="Ai6zQ5AwxFAZKY3DtRmKAPJHZVlK4h_e01jNbblWGbagsXzwH0nf5vYrTEr13kBd"  ZoomLevel="0" Heading="0" />
+       
     </Grid>
 </Page>
     
