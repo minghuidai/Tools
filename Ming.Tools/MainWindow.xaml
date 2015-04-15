@@ -2,6 +2,6 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l="using:System.Data"
-        Title="MainWindow" Height="350" Width="700" Source="Pages\Dashboard.xaml">
-    
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="768" Width="1024" Source="Pages\Dashboard.xaml">
 </NavigationWindow>
